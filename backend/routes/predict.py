@@ -1,3 +1,4 @@
+import sys
 from flask import Blueprint, request, jsonify
 from backend.services.model_service import model_service
 from backend.utils.preprocess import preprocess_image
@@ -13,8 +14,9 @@ def predict():
 
     try:
         img_bytes = file.read()
-        processed_img = preprocess_image(img_bytes)
+        print(f"Predict request received: filename={file.filename}, size={len(img_bytes)} bytes")
 
+        processed_img = preprocess_image(img_bytes)
         predicted_class, confidence, all_probs = model_service.predict(processed_img)
 
         return jsonify({
@@ -23,4 +25,5 @@ def predict():
             'all_probs': all_probs
         })
     except Exception as e:
+        print(f"Prediction error: {e}", file=sys.stderr)
         return jsonify({'error': str(e)}), 500
