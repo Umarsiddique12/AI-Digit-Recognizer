@@ -70,6 +70,9 @@ export default function UploadBox({ onPredict, onClear, loading }) {
   };
 
   const startDrawing = useCallback((e) => {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -84,7 +87,9 @@ export default function UploadBox({ onPredict, onClear, loading }) {
 
   const draw = useCallback((e) => {
     if (!isDrawing) return;
-    e.preventDefault();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -220,7 +225,7 @@ export default function UploadBox({ onPredict, onClear, loading }) {
       {/* Editor Space */}
       <div className="flex-1 flex justify-center items-center py-2">
         {activeMode === 'draw' ? (
-          <div className="relative flex justify-center w-full max-w-[360px] aspect-square rounded-2xl overflow-hidden">
+          <div className="relative flex justify-center w-full max-w-[360px] aspect-square rounded-2xl overflow-hidden" style={{ touchAction: 'none' }}>
             {!hasDrawn && (
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 select-none">
                 <div className="text-slate-600 text-5xl font-black mb-1" style={{ fontFamily: 'Space Grotesk' }}>0–9</div>
@@ -232,7 +237,7 @@ export default function UploadBox({ onPredict, onClear, loading }) {
               width={400}
               height={400}
               className="canvas-glow rounded-2xl touch-none w-full bg-white"
-              style={{ cursor: 'crosshair' }}
+              style={{ cursor: 'crosshair', touchAction: 'none' }}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
