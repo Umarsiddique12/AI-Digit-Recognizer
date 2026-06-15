@@ -1,0 +1,56 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+web_resources/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Python environment
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+.pytest_cache/
+.tox/
+
+# Logs and Uploads
+*.log
+backend/logs/*
+!backend/logs/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# IDE and System Files
+.vscode/
+.idea/
+.project
+.classpath
+.settings/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables (secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.env

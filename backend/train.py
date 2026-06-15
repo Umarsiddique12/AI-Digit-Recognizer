@@ -46,8 +46,13 @@ def train_model():
     print(f"Test Accuracy: {test_acc:.4f}")
 
     print("Saving Model...")
-    model.save('mnist_model.h5')
-    print("Model saved to mnist_model.h5")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    model_dir = os.path.join(base_dir, 'model')
+    os.makedirs(model_dir, exist_ok=True)
+    model_path = os.path.join(model_dir, 'mnist_model.h5')
+    
+    model.save(model_path)
+    print(f"Model saved to {model_path}")
 
 if __name__ == "__main__":
     train_model()
