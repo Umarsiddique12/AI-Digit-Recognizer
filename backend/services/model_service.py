@@ -29,6 +29,15 @@ class ModelService:
             self.model.output_shape,
         )
 
+        # ── WARM-UP PREDICTION ──────────────────────────────────────────────
+        # TensorFlow's first prediction takes 10-30 seconds on slow CPUs
+        # due to graph tracing/initialization. We run a dummy prediction
+        # during startup so user requests don't hit Gunicorn's 30s timeout.
+        logger.info("Running warmup prediction to initialize TensorFlow...")
+        dummy_input = np.zeros((1, 28, 28, 1), dtype=np.float32)
+        self.model.predict(dummy_input, verbose=0)
+        logger.info("[OK] Warmup complete. Model is fully ready.")
+
     def predict(self, processed_img):
         if self.model is None:
             raise RuntimeError("Model is not loaded. Call load_model() first.")
