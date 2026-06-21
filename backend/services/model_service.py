@@ -1,37 +1,48 @@
 import os
 import logging
-import tensorflow as tf
 import numpy as np
 
 logger = logging.getLogger(__name__)
+
 
 class ModelService:
     def __init__(self):
         self.model = None
 
-    def load_model(self, model_path):
+    def load_model(self, model_path: str):
         if self.model is not None:
+            logger.info("Model already loaded – skipping reload")
             return
 
         if not os.path.exists(model_path):
-            logger.error(f"Model file not found at {model_path}")
-            raise FileNotFoundError(f"Model file not found at {model_path}")
+            raise FileNotFoundError(f"Model file not found at: {model_path}")
 
-        logger.info(f"Loading model from {model_path}")
+        logger.info("Loading TensorFlow model from %s …", model_path)
+
+        # Import inside method so startup errors are clearly reported
+        import tensorflow as tf  # noqa: F401
+
         self.model = tf.keras.models.load_model(model_path)
-        logger.info("Model loaded successfully.")
+        logger.info(
+            "[OK] Model loaded successfully.  Input shape: %s  Output shape: %s",
+            self.model.input_shape,
+            self.model.output_shape,
+        )
 
     def predict(self, processed_img):
         if self.model is None:
-            logger.error("Prediction requested before model was loaded")
-            raise RuntimeError("Model is not loaded.")
+            raise RuntimeError("Model is not loaded. Call load_model() first.")
 
-        prediction = self.model.predict(processed_img)
+        logger.info("model.predict() input shape: %s", processed_img.shape)
+        prediction = self.model.predict(processed_img, verbose=0)
+        logger.info("model.predict() output shape: %s  values: %s", prediction.shape, prediction)
+
         predicted_class = int(np.argmax(prediction[0]))
         confidence = float(np.max(prediction[0]))
         all_probs = [float(p) for p in prediction[0].tolist()]
 
         return predicted_class, confidence, all_probs
 
-# Instantiate singleton service
+
+# Singleton instance used across the app
 model_service = ModelService()
