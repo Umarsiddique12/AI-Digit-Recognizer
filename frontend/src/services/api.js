@@ -1,5 +1,7 @@
 // Backend URL: set VITE_API_URL in .env (local) or Render env vars (production)
+console.log('[DEBUG] import.meta.env.VITE_API_URL =', import.meta.env.VITE_API_URL);
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+console.log('[DEBUG] Computed API_URL =', API_URL);
 
 /**
  * Sends a digit image blob to the Flask backend for prediction.
@@ -7,17 +9,23 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replac
  * @returns {Promise<Object>} Prediction JSON: { prediction, confidence, all_probs }
  */
 export const predictDigit = async (blob) => {
+  console.log('[DEBUG] predictDigit called with blob size:', blob.size, 'type:', blob.type);
   const formData = new FormData();
   formData.append('image', blob, 'digit.png');
+  console.log('[DEBUG] FormData created with image file.');
 
   let response;
   try {
-    response = await fetch(`${API_URL}/predict`, {
+    const targetUrl = `${API_URL}/predict`;
+    console.log('[DEBUG] Attempting fetch POST to:', targetUrl);
+    response = await fetch(targetUrl, {
       method: 'POST',
       body: formData,
       // Do NOT set Content-Type header manually — browser sets it with boundary
     });
+    console.log('[DEBUG] fetch returned response. status:', response.status, response.statusText);
   } catch (networkErr) {
+    console.error('[DEBUG] fetch caught a network error:', networkErr);
     // Covers: server down, CORS preflight blocked, network offline
     throw new Error(
       `Cannot reach backend at ${API_URL}. Is the server running? (${networkErr.message})`

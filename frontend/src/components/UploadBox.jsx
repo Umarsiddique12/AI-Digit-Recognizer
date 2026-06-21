@@ -117,16 +117,28 @@ export default function UploadBox({ onPredict, onClear, loading }) {
   };
 
   const handlePredict = () => {
+    console.log('[DEBUG] Predict button clicked. Active mode:', activeMode);
     if (activeMode === 'draw') {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!canvas) {
+        console.error('[DEBUG] Canvas ref is null');
+        return;
+      }
+      console.log('[DEBUG] Generating blob from canvas...');
       canvas.toBlob((blob) => {
+        console.log('[DEBUG] Canvas blob generated:', blob);
         if (blob) {
+          console.log('[DEBUG] Calling onPredict with canvas blob');
           onPredict(blob);
+        } else {
+          console.error('[DEBUG] Canvas blob is null');
         }
       }, 'image/png');
     } else if (activeMode === 'upload' && uploadedFile) {
+      console.log('[DEBUG] Calling onPredict with uploaded file:', uploadedFile.name);
       onPredict(uploadedFile);
+    } else {
+      console.error('[DEBUG] Upload mode active but no uploadedFile is set.');
     }
   };
 
