@@ -5,7 +5,7 @@ class Config:
     MODEL_PATH = os.environ.get('MODEL_PATH', os.path.join(BASE_DIR, 'model', 'mnist_model.h5'))
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
     LOG_FOLDER = os.path.join(BASE_DIR, 'logs')
-    PORT = int(os.environ.get('PORT', 5000))
+    PORT = int(os.environ.get('PORT', 8000))
     DEBUG = os.environ.get('FLASK_ENV', '').lower() == 'development'
 
     @classmethod

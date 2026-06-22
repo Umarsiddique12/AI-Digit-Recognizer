@@ -33,15 +33,12 @@ function App() {
 
   // Sends the image blob to the API service
   const handlePrediction = async (imageBlob) => {
-    console.log('[DEBUG] App.handlePrediction started with imageBlob:', imageBlob);
     setLoading(true);
     setError(null);
     setShowResult(false);
 
     try {
-      console.log('[DEBUG] App.handlePrediction calling predictDigit(imageBlob)');
       const data = await predictDigit(imageBlob);
-      console.log('[DEBUG] App.handlePrediction received data from predictDigit:', data);
       setPrediction(data.prediction);
       setConfidence(data.confidence);
       setAllProbs(data.all_probs || null);
@@ -53,11 +50,9 @@ function App() {
         setActiveTab('results'); // Switch directly to Results tab for full details
       }, 150);
     } catch (err) {
-      console.error('[DEBUG] App.handlePrediction caught an error:', err);
       console.error(err);
-      setError(err.message || 'Unable to connect to Flask API. Ensure the backend is active on port 5000.');
+      setError(err.message || 'Unable to connect to Flask API. Ensure the backend is active on port 8000.');
     } finally {
-      console.log('[DEBUG] App.handlePrediction finally block executing (loading = false)');
       setLoading(false);
     }
   };

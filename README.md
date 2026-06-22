@@ -79,7 +79,7 @@ Open a terminal in the root folder (`DL_MINI/`):
    ```bash
    python backend/app.py
    ```
-   *The Flask backend will launch on `http://localhost:5000` by default.*
+   *The Flask backend will launch on `http://localhost:8000` by default.*
 
 ### 2. Frontend Setup
 
